@@ -1,0 +1,33 @@
+INFO:     Started server process [18564]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:7860 (Press CTRL+C to quit)
+StyleScape: http://127.0.0.1:7860 | Admin: http://127.0.0.1:7860/admin/
+INFO:     127.0.0.1:57745 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57747 - "GET /manifest.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57745 - "GET /theme.css?v=910dc73adcac4609e2fc0be8531fd7143f89c878ac5e606ea4b4d71edccd6f37 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57745 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57745 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57758 - "GET /gradio_api/upload_progress?upload_id=r41q5g0wxi9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57746 - "POST /gradio_api/upload?upload_id=r41q5g0wxi9 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57746 - "GET /gradio_api/file%3DC%3A/Users/Dxrkus/AppData/Local/Temp/gradio/fa710d07a7995e633e5f708f25fc4d2caac3d4be754aa7408b238e3ea11e80c9/1%20%284%29.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57746 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57758 - "GET /static/fonts/IBMPlexMono/IBMPlexMono-Regular.woff2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57746 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57766 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57766 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57766 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57766 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57766 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57769 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "GET /gradio_api/file%3DC%3A/Users/Dxrkus/AppData/Local/Temp/gradio/822325e2e577bfe7c21355d25019207d069f375230689a8a74dca0e11339614f/design_20260927_182053_50afbd4c.png HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57770 - "GET /gradio_api/file%3DC%3A/Users/Dxrkus/AppData/Local/Temp/gradio/822325e2e577bfe7c21355d25019207d069f375230689a8a74dca0e11339614f/design_20260927_182053_50afbd4c.png HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57805 - "GET /gradio_api/file%3DC%3A/Users/Dxrkus/AppData/Local/Temp/gradio/822325e2e577bfe7c21355d25019207d069f375230689a8a74dca0e11339614f/design_20260927_182053_50afbd4c.png HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57826 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57826 - "GET /gradio_api/queue/data?session_hash=nts0s275be HTTP/1.1" 200 OK

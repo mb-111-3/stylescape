@@ -1,0 +1,21 @@
+INFO:     Started server process [5632]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:7860 (Press CTRL+C to quit)
+StyleScape: http://127.0.0.1:7860 | Admin: http://127.0.0.1:7860/admin/
+INFO:     127.0.0.1:58111 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58113 - "GET /manifest.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58111 - "GET /theme.css?v=910dc73adcac4609e2fc0be8531fd7143f89c878ac5e606ea4b4d71edccd6f37 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58114 - "GET /assets/Example-DWDv4qx4.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58115 - "GET /assets/Index-CvOXDAXN.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58112 - "GET /assets/Example-CLjx-9UA.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58111 - "GET /assets/Index-5Ep2QZRN.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58227 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58227 - "GET /gradio_api/queue/data?session_hash=3rl8w6yqa1q HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58237 - "GET /gradio_api/upload_progress?upload_id=x15kbp9s72l HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58236 - "POST /gradio_api/upload?upload_id=x15kbp9s72l HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58236 - "GET /gradio_api/file%3DC%3A/Users/Dxrkus/AppData/Local/Temp/gradio/f07d2793da80a23459a65d874963889e79c550c692fdb3a12b99a2097216586b/1%20%289%29.jpg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58237 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58237 - "GET /gradio_api/queue/data?session_hash=3rl8w6yqa1q HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58348 - "POST /gradio_api/queue/join HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58348 - "GET /gradio_api/queue/data?session_hash=3rl8w6yqa1q HTTP/1.1" 200 OK

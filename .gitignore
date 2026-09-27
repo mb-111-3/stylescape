@@ -1,0 +1,15 @@
+.env
+outputs/
+uploads/
+__pycache__/
+venv/
+*.pyc
+server.log
+server.err.log
+
+.env.env.tmp
+data/raw/
+data/interior_rooms/
+data/interior_rooms_copy/
+
+.settings-private/
