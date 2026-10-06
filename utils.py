@@ -23,7 +23,22 @@ import re
 
 ROOM_TYPES = ["Living Room", "Bedroom", "Kitchen", "Bathroom"]
 
-STYLES = ["Modern", "Minimal", "Luxury", "Scandinavian", "Contemporary Indian"]
+STYLES = [
+    "Modern",
+    "Luxury",
+    "Contemporary Indian",
+    "South Indian",
+    "North Indian",
+    "Maharashtrian",
+    "Rajasthani",
+    "Gujarati",
+    "Kerala",
+    "Bengali",
+    "Punjabi",
+    "Kashmiri",
+    "Mughal / Indo-Islamic",
+    "General Indian Traditional",
+]
 
 PALETTES = {
     "Warm sanctuary": ("#E8DDCC", "#A87652", "#536451"),
@@ -47,27 +62,98 @@ STYLE_DESCRIPTIONS = {
         "balanced decorative accents, statement designer lighting fixtures, "
         "monochrome base palette with one bold accent"
     ),
-    "Minimal": (
-        "minimalist interior design, uncluttered space, simple geometric forms, "
-        "functional furniture with hidden storage, exposed negative space, matte neutral "
-        "finishes, soft neutral tones, diffused even lighting, calm and airy atmosphere"
-    ),
     "Luxury": (
         "luxury interior design, opulent finishes, book-matched marble surfaces, "
         "brushed gold and brass accents, crystal chandeliers, plush velvet upholstered "
         "furniture, high-end materials, rich layered textures, five-star hotel ambiance, "
         "dramatic layered lighting"
     ),
-    "Scandinavian": (
-        "scandinavian interior design, light natural wood furniture, cozy knit textiles, "
-        "hygge atmosphere, soft diffused natural daylight, white and pastel tones, "
-        "woven rattan and linen accents, functional and warm minimalism"
-    ),
     "Contemporary Indian": (
         "contemporary Indian interior design, warm earthy terracotta and ochre tones, "
         "handcrafted solid wood furniture with carved detailing, brass and copper accents, "
         "traditional block-print or ikat textile patterns, jali-inspired screen motifs, "
         "modern fusion of Indian heritage craftsmanship and contemporary comfort"
+    ),
+    "South Indian": (
+        "traditional South Indian interior design inspired by Tamil Nadu, Karnataka and "
+        "Andhra/Telangana heritage, dark teak and rosewood furniture, carved wooden pillars, "
+        "courtyard-oriented layout cues, brass lamps and brass urli bowls, wooden swings, "
+        "traditional geometric patterns, stone or patterned tile flooring, Tanjore-inspired "
+        "gold-leaf artwork, large traditional carved wooden doors, cream, brown, maroon, "
+        "mustard and deep green color palette, elegant grand temple-and-courtyard ambiance"
+    ),
+    "North Indian": (
+        "traditional North Indian interior design, Mughal-inspired jaali lattice screens and "
+        "arches, hand-carved sheesham wood furniture, rich jewel-tone textiles with zari and "
+        "mirror-work embroidery, ornate brass and copper lanterns, royal Rajasthani color "
+        "palette of deep reds, saffron, and indigo, intricate inlay or jharokha-style window "
+        "framing, plush floor seating with bolster cushions, opulent heritage ambiance"
+    ),
+    "Maharashtrian": (
+        "traditional Maharashtrian Wada-inspired interior design, wooden pillars and exposed "
+        "beams, carved wooden furniture, a wooden jhula swing, paati and traditional low "
+        "seating, brass samai and traditional oil lamps, copper and brass vessels as decor, "
+        "terracotta or stone flooring, earthy beige, brown, ochre and muted red color palette, "
+        "traditional Maharashtrian fabrics, traditional wooden doors and windows, "
+        "courtyard-oriented planning cues, refined heritage Wada feel suited to a modern home"
+    ),
+    "Rajasthani": (
+        "Rajasthani Haveli-inspired interior design, jharokhas and arched openings, carved "
+        "wooden furniture, sandstone and marble surfaces, decorative hand-painted wall "
+        "patterns, traditional miniature artwork, bandhani and embroidered textiles, rich red, "
+        "terracotta, mustard yellow, royal blue and turquoise color palette, brass lanterns and "
+        "decorative objects, ornamental jaali screens and wall niches, royal colorful artistic "
+        "Haveli ambiance"
+    ),
+    "Gujarati": (
+        "Gujarati interior design, bright and artistic interiors, traditional wooden furniture, "
+        "a carved wooden Gujarati chowki, bandhani textiles with embroidery and mirror work, "
+        "colorful wall decoration, handcrafted wooden elements, brass decor pieces, vibrant "
+        "red, yellow, orange, green, pink and blue color palette, traditional cushions and "
+        "floor seating, vibrant handcrafted culturally Gujarati feel without visual clutter"
+    ),
+    "Kerala": (
+        "Kerala Nalukettu-inspired interior design, central-courtyard planning cues, sloping "
+        "tiled-roof architectural character, large timber structural elements, teak and "
+        "rosewood furniture, traditional carved wooden columns, brass nilavilakku lamps, "
+        "natural stone and terracotta flooring, white, cream, brown and muted green color "
+        "palette, Kerala handloom fabrics, open naturally ventilated climate-responsive "
+        "layout with strong wood and courtyard connection"
+    ),
+    "Bengali": (
+        "Bengali interior design, simple and artistic interiors, wooden and cane furniture, "
+        "terracotta decorative elements, kantha-stitch textiles, Bengali handloom fabrics, "
+        "traditional artwork, warm earthy color palette of terracotta red, cream, mustard, "
+        "brown and muted green, handcrafted pottery accents, simple brass lighting, warm "
+        "artistic comfortable Bengali cultural feel"
+    ),
+    "Punjabi": (
+        "Punjabi interior design, vibrant and bold interiors, rich fabrics with phulkari "
+        "embroidery, colorful cushions, heavy carved wooden furniture, traditional seating, "
+        "brass decorative objects, warm layered lighting, red, orange, yellow, green and "
+        "royal blue color palette, traditional Punjabi artwork and decorative textiles, "
+        "energetic welcoming colorful luxurious Punjabi identity"
+    ),
+    "Kashmiri": (
+        "Kashmiri interior design, detailed walnut wood carving, Kashmiri carpets, "
+        "Persian-inspired patterns, papier-mache decorative accents, khatamband-inspired "
+        "geometric ceiling patterns, rich textiles, deep red, burgundy, green, blue, brown "
+        "and gold color palette, carved wooden furniture, decorative lamps, intricate "
+        "geometric and floral motifs, luxurious warm artistic highly detailed ambiance"
+    ),
+    "Mughal / Indo-Islamic": (
+        "Mughal palace-inspired Indo-Islamic interior design, arches and domed architectural "
+        "cues, jaali screens, geometric patterns, symmetrical layout, marble and sandstone "
+        "surfaces, brass accents, carved wood, rich silk velvet and brocade textiles, deep "
+        "red, emerald green, royal blue, ivory and gold color palette, floral and geometric "
+        "motifs, decorative lanterns, regal symmetrical sophisticated architectural detail"
+    ),
+    "General Indian Traditional": (
+        "general Indian traditional interior design combining common Indian heritage "
+        "elements, carved wooden furniture, brass lamps and vessels, Indian textiles, "
+        "rangoli-inspired floor motifs, traditional paintings, jaali patterns, handcrafted "
+        "decor, terracotta and stone accents, warm earthy color palette, traditional "
+        "handicrafts and regional artwork, broadly and authentically Indian heritage feel"
     ),
 }
 
@@ -94,25 +180,25 @@ ROOM_TYPE_DESCRIPTIONS = {
 # plausible for both the space and the chosen aesthetic simultaneously.
 ROOM_STYLE_REFINEMENTS = {
     ("Living Room", "Modern"): "low sectional sofa, geometric area rug, floating media wall",
-    ("Living Room", "Minimal"): "single statement sofa, low coffee table, bare walls with one accent piece",
     ("Living Room", "Luxury"): "tufted velvet sofa set, marble coffee table, statement chandelier over seating",
-    ("Living Room", "Scandinavian"): "light wood frame sofa, chunky knit throw, pale rug, potted plants",
     ("Living Room", "Contemporary Indian"): "carved wooden sofa with Indian textile cushions, brass coffee table, jali screen accent",
     ("Bedroom", "Modern"): "platform bed with upholstered headboard, floating nightstands, minimal pendant lighting",
-    ("Bedroom", "Minimal"): "low platform bed, no footboard, single nightstand, hidden wardrobe",
     ("Bedroom", "Luxury"): "upholstered tufted headboard, silk bedding, crystal bedside lamps, plush bench",
-    ("Bedroom", "Scandinavian"): "light wood bed frame, linen bedding, woven pendant light, cozy wool rug",
     ("Bedroom", "Contemporary Indian"): "carved wooden bed frame, block-print bedding, brass table lamps",
     ("Kitchen", "Modern"): "handleless flat-panel cabinets, quartz countertop, waterfall island edge",
-    ("Kitchen", "Minimal"): "flat white cabinetry, integrated handles, single-tone countertop, no visible clutter",
     ("Kitchen", "Luxury"): "marble countertops and backsplash, brass hardware, under-cabinet lighting",
-    ("Kitchen", "Scandinavian"): "light wood cabinetry, open shelving, white countertop, simple pendant lights",
     ("Kitchen", "Contemporary Indian"): "warm wood cabinetry with brass handles, terracotta backsplash accent",
     ("Bathroom", "Modern"): "floating vanity, frameless glass shower, matte black fixtures",
-    ("Bathroom", "Minimal"): "wall-mounted vanity, large format tiles, concealed fittings",
     ("Bathroom", "Luxury"): "marble-clad walls, freestanding tub, gold fixtures, backlit mirror",
-    ("Bathroom", "Scandinavian"): "light wood vanity, white tiles, woven storage baskets, soft daylight",
     ("Bathroom", "Contemporary Indian"): "terracotta tile accents, brass fixtures, carved wood vanity",
+    ("Living Room", "South Indian"): "carved rosewood sofa with cane inlay, Athangudi-tile-pattern rug, brass kuthu vilakku lamp as accent",
+    ("Living Room", "North Indian"): "sheesham wood low seating with bolster cushions, jaali screen partition, ornate brass lantern pendant",
+    ("Bedroom", "South Indian"): "teak wood carved bed frame, temple-motif headboard, brass table lamp, woven cane bench",
+    ("Bedroom", "North Indian"): "sheesham wood carved bed, mirror-work and zari bedding, jharokha-style window frame, brass lanterns",
+    ("Kitchen", "South Indian"): "dark wood cabinetry with brass handles, Athangudi tile backsplash, traditional brass vessel display shelf",
+    ("Kitchen", "North Indian"): "carved wood cabinet fronts, jaali-pattern cabinet inserts, copper and brass fixtures",
+    ("Bathroom", "South Indian"): "Athangudi tile flooring, teak wood vanity, brass fixtures and mirror frame",
+    ("Bathroom", "North Indian"): "jaali-pattern tile accent wall, carved wood vanity, ornate brass fixtures",
 }
 
 WALL_COLOR_DESCRIPTIONS = {
