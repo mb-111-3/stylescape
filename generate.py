@@ -205,7 +205,7 @@ def _call_stability_structure_api(
     )
 
     if response.status_code >= 400:
-        raise RuntimeError({401: "The API key is invalid. Update it on the admin page.", 402: "The Stability account has insufficient credits.", 403: "The provider rejected this request. Try a different image or prompt.", 429: "The provider is busy. Please try again shortly."}.get(response.status_code, f"Generation provider returned HTTP {response.status_code}. Please try again."))
+        raise RuntimeError({401: "The API key is invalid. Update it on the admin page.", 402: "The generation service is temporarily unavailable. Please try again later.", 403: "The provider rejected this request. Try a different image or prompt.", 429: "The provider is busy. Please try again shortly."}.get(response.status_code, f"Generation provider returned HTTP {response.status_code}. Please try again."))
 
     try:
         return Image.open(BytesIO(response.content)).convert("RGB")

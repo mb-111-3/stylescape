@@ -19,7 +19,7 @@ def load_dotenv():
 
 load_dotenv()
 from generate import iter_redesign_variations, get_runtime_defaults
-from utils import PALETTES, ROOM_TYPES, STYLES, ValidationError, build_prompt, save_generated_image, save_uploaded_image, validate_inputs
+from utils import ROOM_TYPES, STYLES, ValidationError, build_prompt, save_generated_image, save_uploaded_image, validate_inputs
 
 SETTINGS_LOCK = Lock()
 CSS = """
@@ -39,8 +39,6 @@ body {background: #f5f6fa !important;}
 #generate:hover {background:var(--accent-dark); border-color:var(--accent-dark); transform:translateY(-1px);}
 .panel {background: #ffffff; border:1px solid #e4e7ec; border-radius:14px; padding:24px; box-shadow:0 3px 16px #10182805;}
 .panel h3 {color:#344054; font-size:15px !important; font-weight:600; letter-spacing:.1px;}
-#palette-preview {display:flex; gap:10px; padding:4px 0 12px;}
-.swatch {flex:1; height:54px; border-radius:8px; border:1px solid #d0d5dd; display:flex; align-items:end; padding:6px; font-size:11px; color:#fff; text-shadow:0 1px 4px #000;}
 #studio-layout {gap:24px; align-items:flex-start;}
 .card-stack {gap:20px !important; background:transparent !important; border:0 !important;}
 .design-card {padding:24px !important; background:#fff !important; border:1px solid #e5e7f0 !important; border-radius:18px !important; box-shadow:0 6px 24px rgba(17,24,39,.06); overflow:visible !important; transition:box-shadow .2s;}
@@ -126,13 +124,6 @@ def find_available_port(start_port=7860, attempts=20):
             if sock.connect_ex(('127.0.0.1', port)) != 0:
                 return port
     raise RuntimeError('No available application port.')
-
-def palette_preview(wall, secondary, accent):
-    import re
-    colors = (wall, secondary, accent)
-    if not all(re.fullmatch(r'#[0-9a-fA-F]{6}', c or '') for c in colors):
-        return ''
-    return '<div id="palette-preview">' + ''.join(f'<div class="swatch" style="background:{c}">{c.upper()}</div>' for c in colors) + '</div>'
 
 def preview(room, style, wall, prompt, secondary, accent):
     try:
@@ -223,13 +214,9 @@ def step1_next(image):
         return gr.update(visible=True), gr.update(visible=False), '### Please upload a room photo to continue.'
     return gr.update(visible=False), gr.update(visible=True), ''
 
-def step2_next(image, room, style, wall, secondary, accent):
+def step2_next(image, room, style, wall):
     try:
         validate_inputs(image, room, style, wall)
-        for color in (secondary, accent):
-            import re as _re
-            if not _re.fullmatch(r'#[0-9a-fA-F]{6}', color or ''):
-                raise ValidationError('Choose valid six-digit hex colors.')
     except ValidationError as exc:
         raise gr.Error(str(exc))
     return gr.update(visible=False), gr.update(visible=True), ''
@@ -263,18 +250,12 @@ def build_interface():
             with gr.Row():
                 room = gr.Dropdown(ROOM_TYPES, value=ROOM_TYPES[0], label='Room type')
                 style = gr.Dropdown(STYLES, value=STYLES[0], label='Interior style')
-            palette = gr.Dropdown(list(PALETTES), value='Warm sanctuary', label='Color palette')
-            swatches = gr.HTML(palette_preview(*PALETTES['Warm sanctuary']))
-            with gr.Row():
-                wall = gr.ColorPicker(value='#E8DDCC', label='Walls / 60%', min_width=110)
-                secondary = gr.ColorPicker(value='#A87652', label='Furniture / 30%', min_width=110)
-                accent = gr.ColorPicker(value='#536451', label='Accents / 10%', min_width=110)
-            palette.change(lambda name: PALETTES[name], palette, [wall, secondary, accent], api_name=False)
-            for color in [wall, secondary, accent]:
-                color.change(palette_preview, [wall, secondary, accent], swatches, api_name=False)
             count = gr.Radio([1, 2, 3, 4], value=2, label='Number of design concepts', info='Each option is a different generated design for you to compare.')
             # Fixed, code-level defaults (not shown to the user): free-text prompt is left blank,
-            # and generation quality settings use the runtime defaults below.
+            # colors use the default palette, and generation quality settings use the runtime defaults below.
+            wall = gr.Textbox(value='#E8DDCC', visible=False)
+            secondary = gr.Textbox(value='#A87652', visible=False)
+            accent = gr.Textbox(value='#536451', visible=False)
             prompt = gr.Textbox(value='', visible=False)
             strength = gr.Number(value=.35, visible=False)
             guidance = gr.Number(value=10, visible=False)
@@ -299,7 +280,7 @@ def build_interface():
         close_3.click(goto_hero, None, [hero_screen, step1_modal, step2_modal, output_screen], api_name=False)
         save_next_1.click(step1_next, [image], [step1_modal, step2_modal, step1_error], api_name=False)
         save_next_2.click(
-            step2_next, [image, room, style, wall, secondary, accent], [step2_modal, output_screen, step2_error], api_name=False
+            step2_next, [image, room, style, wall], [step2_modal, output_screen, step2_error], api_name=False
         ).success(
             stream_redesign, [image, room, style, wall, prompt, secondary, accent, strength, guidance, steps, count],
             [gallery, status, downloads], concurrency_limit=1, api_name=False,

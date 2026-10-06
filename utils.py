@@ -42,36 +42,77 @@ OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
 # Descriptive fragments used to enrich the auto-generated prompt.
 STYLE_DESCRIPTIONS = {
     "Modern": (
-        "modern interior design, sleek clean lines, contemporary furniture, "
-        "polished surfaces, balanced decorative accents, "
-        "designer lighting fixtures"
+        "modern interior design, sleek clean lines, contemporary furniture with low-profile "
+        "silhouettes, polished and matte surface mix, glass and brushed metal accents, "
+        "balanced decorative accents, statement designer lighting fixtures, "
+        "monochrome base palette with one bold accent"
     ),
     "Minimal": (
         "minimalist interior design, uncluttered space, simple geometric forms, "
-        "functional furniture, hidden storage, soft neutral tones, calm and airy atmosphere"
+        "functional furniture with hidden storage, exposed negative space, matte neutral "
+        "finishes, soft neutral tones, diffused even lighting, calm and airy atmosphere"
     ),
     "Luxury": (
-        "luxury interior design, opulent finishes, marble and gold accents, "
-        "elegant chandeliers, plush upholstered furniture, high-end materials, "
-        "rich textures, five-star hotel ambiance"
+        "luxury interior design, opulent finishes, book-matched marble surfaces, "
+        "brushed gold and brass accents, crystal chandeliers, plush velvet upholstered "
+        "furniture, high-end materials, rich layered textures, five-star hotel ambiance, "
+        "dramatic layered lighting"
     ),
     "Scandinavian": (
-        "scandinavian interior design, light wood furniture, cozy textiles, "
-        "hygge atmosphere, soft natural lighting, white and pastel tones, "
-        "functional and warm minimalism"
+        "scandinavian interior design, light natural wood furniture, cozy knit textiles, "
+        "hygge atmosphere, soft diffused natural daylight, white and pastel tones, "
+        "woven rattan and linen accents, functional and warm minimalism"
     ),
     "Contemporary Indian": (
-        "contemporary Indian interior design, warm earthy tones, handcrafted wooden "
-        "furniture, brass and terracotta accents, traditional textile patterns, "
-        "modern fusion of Indian heritage and contemporary comfort"
+        "contemporary Indian interior design, warm earthy terracotta and ochre tones, "
+        "handcrafted solid wood furniture with carved detailing, brass and copper accents, "
+        "traditional block-print or ikat textile patterns, jali-inspired screen motifs, "
+        "modern fusion of Indian heritage craftsmanship and contemporary comfort"
     ),
 }
 
 ROOM_TYPE_DESCRIPTIONS = {
-    "Living Room": "spacious living room with sofa, coffee table, and entertainment area",
-    "Bedroom": "comfortable bedroom with bed, nightstands, and soft ambient lighting",
-    "Kitchen": "functional kitchen with countertops, cabinetry, and modern appliances",
-    "Bathroom": "clean bathroom with vanity, fixtures, and elegant tiling",
+    "Living Room": (
+        "spacious living room with a sofa set, coffee table, area rug, accent chairs, "
+        "media console, and a defined entertainment area, wide-angle architectural view"
+    ),
+    "Bedroom": (
+        "comfortable bedroom with a dressed bed, headboard, nightstands with lamps, "
+        "a wardrobe or dresser, and soft ambient layered lighting"
+    ),
+    "Kitchen": (
+        "functional kitchen with countertops, base and wall cabinetry, a backsplash, "
+        "modern appliances, and clearly defined worktop and sink areas"
+    ),
+    "Bathroom": (
+        "clean bathroom with a vanity and mirror, shower or tub area, fixtures and "
+        "fittings, and elegant floor-to-ceiling tiling"
+    ),
+}
+
+# Per-(room type, style) accuracy refinements so furniture and materials stay
+# plausible for both the space and the chosen aesthetic simultaneously.
+ROOM_STYLE_REFINEMENTS = {
+    ("Living Room", "Modern"): "low sectional sofa, geometric area rug, floating media wall",
+    ("Living Room", "Minimal"): "single statement sofa, low coffee table, bare walls with one accent piece",
+    ("Living Room", "Luxury"): "tufted velvet sofa set, marble coffee table, statement chandelier over seating",
+    ("Living Room", "Scandinavian"): "light wood frame sofa, chunky knit throw, pale rug, potted plants",
+    ("Living Room", "Contemporary Indian"): "carved wooden sofa with Indian textile cushions, brass coffee table, jali screen accent",
+    ("Bedroom", "Modern"): "platform bed with upholstered headboard, floating nightstands, minimal pendant lighting",
+    ("Bedroom", "Minimal"): "low platform bed, no footboard, single nightstand, hidden wardrobe",
+    ("Bedroom", "Luxury"): "upholstered tufted headboard, silk bedding, crystal bedside lamps, plush bench",
+    ("Bedroom", "Scandinavian"): "light wood bed frame, linen bedding, woven pendant light, cozy wool rug",
+    ("Bedroom", "Contemporary Indian"): "carved wooden bed frame, block-print bedding, brass table lamps",
+    ("Kitchen", "Modern"): "handleless flat-panel cabinets, quartz countertop, waterfall island edge",
+    ("Kitchen", "Minimal"): "flat white cabinetry, integrated handles, single-tone countertop, no visible clutter",
+    ("Kitchen", "Luxury"): "marble countertops and backsplash, brass hardware, under-cabinet lighting",
+    ("Kitchen", "Scandinavian"): "light wood cabinetry, open shelving, white countertop, simple pendant lights",
+    ("Kitchen", "Contemporary Indian"): "warm wood cabinetry with brass handles, terracotta backsplash accent",
+    ("Bathroom", "Modern"): "floating vanity, frameless glass shower, matte black fixtures",
+    ("Bathroom", "Minimal"): "wall-mounted vanity, large format tiles, concealed fittings",
+    ("Bathroom", "Luxury"): "marble-clad walls, freestanding tub, gold fixtures, backlit mirror",
+    ("Bathroom", "Scandinavian"): "light wood vanity, white tiles, woven storage baskets, soft daylight",
+    ("Bathroom", "Contemporary Indian"): "terracotta tile accents, brass fixtures, carved wood vanity",
 }
 
 WALL_COLOR_DESCRIPTIONS = {
@@ -147,6 +188,7 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
     room_desc = ROOM_TYPE_DESCRIPTIONS.get(room_type, room_type.lower())
     style_desc = STYLE_DESCRIPTIONS.get(style, style.lower())
     wall_desc = WALL_COLOR_DESCRIPTIONS.get(wall_color, f"{wall_color.lower()} walls")
+    refinement = ROOM_STYLE_REFINEMENTS.get((room_type, style), "")
 
     base_prompt = (
         "Preserve the exact architecture: camera angle, floor plan, wall positions, ceiling, floor, windows, doors, "
@@ -155,9 +197,12 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
         "paint, textures, textiles, lighting, loose furniture, and decor. Keep existing furniture in the same "
         "locations and realistic scale. Photorealistic interior, natural light matching the photo, high detail, "
         "clean and uncluttered. "
-        f"A redesign of a {room_desc}, {style_desc}, {wall_desc}, "
-        f"Use {wall_color} as the dominant wall color (60 percent), {secondary} for furniture and textiles (30 percent), and {accent} for small accents (10 percent). These colors override any style defaults. "
-        f"professional interior photography, architectural digest style, 8k, ultra sharp focus"
+        f"A redesign of a {room_desc}, {style_desc}, {wall_desc}. "
+        + (f"Include details true to this room and style: {refinement}. " if refinement else "")
+        + f"Use {wall_color} as the dominant wall color (60 percent), {secondary} for furniture and textiles (30 percent), and {accent} for small accents (10 percent). These colors override any style defaults. "
+        "Materials, furniture scale, and lighting direction must stay physically consistent with the original photo. "
+        "professional interior photography, architectural digest style, shot on a full-frame DSLR with a wide-angle "
+        "lens, balanced exposure, true-to-life colors, sharp focus throughout, 8k, ultra-detailed, hyperrealistic"
     )
 
     custom_prompt = (custom_prompt or "").strip()
