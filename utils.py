@@ -358,20 +358,21 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
 
     base_prompt = (
         "Restyle this existing room without architectural changes. "
+        f"STYLE PRIORITY: redesign this room fully in {style} style, immediately recognizable as {style}. "
+        f"{style_desc}. "
         f"ROOM LOCK: This space is strictly a {room_type} and must remain a {room_type} "
         f"after redesign. Do not convert it into any other room type. {anchor} "
         "Preserve the exact architecture: camera angle, floor plan, wall positions, ceiling, floor, windows, doors, "
         "door swings, kitchen cabinets, countertops, built-in storage, bathroom fixtures, and all openings stay in "
-        "their original places. Do not move, swap, mirror, add, or remove windows, doors, or cabinetry. Restyle only "
-        "paint, textures, textiles, lighting, loose furniture finishes, and decor. Keep existing furniture in the same "
+        "their original places. Do not move, swap, mirror, add, or remove windows, doors, or cabinetry. Restyle "
+        "paint, textures, textiles, lighting, furniture finishes, and decor to express the selected style. Keep existing furniture in the same "
         "locations and realistic scale. Photorealistic interior, natural light matching the photo, high detail, "
         "clean and uncluttered. "
-        f"A redesign of a {room_desc}, {style_desc}, {wall_desc}. "
+        f"A redesign of a {room_desc}, {wall_desc}, unmistakably in {style} style. "
         + (f"Include details true to this room and style: {refinement}. " if refinement else "")
         + (f"Strictly forbid in this {room_type}: {exclusions}. " if exclusions else "")
-        + f"Use {wall_color} as the dominant wall color (60 percent), {secondary} for furniture and textiles (30 percent), and {accent} for small accents (10 percent). These colors override any style defaults. "
-        "Apply ONLY the selected style's materials, colors, and decor onto this same room type; "
-        "never borrow furniture layouts from a different room type. "
+        + f"Use {wall_color} walls as a base adapted to the {style} palette, with {secondary} for furniture and textiles and {accent} for small accents, harmonized with authentic {style} colors and materials. "
+        f"The finished {room_type} must read clearly as {style} at first glance. "
         "Materials, furniture scale, and lighting direction must stay physically consistent with the original photo. "
         "professional interior photography, architectural digest style, shot on a full-frame DSLR with a wide-angle "
         "lens, balanced exposure, true-to-life colors, sharp focus throughout, 8k, ultra-detailed, hyperrealistic"

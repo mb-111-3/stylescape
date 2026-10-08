@@ -93,7 +93,7 @@ class StudioTests(unittest.TestCase):
     def test_architecture_preservation_caps_transform(self):
         with patch.object(generate, '_get_device_and_dtype', return_value=('cpu', None)), patch.dict(os.environ, {'STABILITY_API_KEY': 'test-key'}), patch.object(generate, '_call_stability_structure_api', return_value=Image.new('RGB', (512,512))) as api:
             generate.generate_redesign_variations(Image.new('RGB', (512,512)), strength=.9, count=1)
-            self.assertAlmostEqual(api.call_args.kwargs['control_strength'], .85)
+            self.assertAlmostEqual(api.call_args.kwargs['control_strength'], .65)
             self.assertTrue(api.call_args.kwargs['prompt'].startswith('Restyle this existing room without architectural changes.'))
 
     def test_full_frame(self):

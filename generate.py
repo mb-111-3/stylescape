@@ -32,9 +32,9 @@ CANNY_CONTROLNET_ID = os.getenv("STYLESCAPE_CANNY_CONTROLNET", "diffusers/contro
 DEPTH_CONTROLNET_ID = os.getenv("STYLESCAPE_DEPTH_CONTROLNET", "diffusers/controlnet-depth-sdxl-1.0")
 DEPTH_MODEL_ID = os.getenv("STYLESCAPE_DEPTH_MODEL", "Intel/dpt-hybrid-midas")
 
-DEFAULT_STRENGTH = 0.35
-DEFAULT_GUIDANCE_SCALE = 10.0
-DEFAULT_CONTROLNET_SCALE = [0.95, 1.0]
+DEFAULT_STRENGTH = 0.55
+DEFAULT_GUIDANCE_SCALE = 12.0
+DEFAULT_CONTROLNET_SCALE = [0.7, 0.8]
 STABILITY_STRUCTURE_URL = "https://api.stability.ai/v2beta/stable-image/control/structure"
 
 _pipeline = None
@@ -234,8 +234,8 @@ def iter_redesign_variations(
     room_type = room_type or "Living Room"
     prompt = prompt or build_prompt(room_type, style or "Modern", wall_color or "Beige", custom_prompt or "")
     count = max(1, min(int(count), 4))
-    # Enforce preservation for UI and programmatic callers alike.
-    strength = max(0.25, min(float(strength), 0.45))
+    # Allow enough change for the style to show, while ControlNet + room lock keep the room type.
+    strength = max(0.35, min(float(strength), 0.65))
 
     _require_supported_runtime()
     device, _ = _get_device_and_dtype()
@@ -245,7 +245,7 @@ def iter_redesign_variations(
                 input_image=input_image,
                 prompt=prompt,
                 seed=seed,
-                control_strength=max(0.85, min(1.0, 1.3 - strength)),
+                control_strength=max(0.65, min(1.0, 1.3 - strength)),
                 room_type=room_type,
             )
         return
@@ -257,7 +257,7 @@ def iter_redesign_variations(
     canny_control = make_canny_control_image(prepared_image)
     depth_control = make_depth_control_image(prepared_image)
 
-    guidance_scale = max(8.0, min(float(guidance_scale), 12.0))
+    guidance_scale = max(7.0, min(float(guidance_scale), 15.0))
     num_inference_steps = max(20, min(int(num_inference_steps), defaults["max_inference_steps"]))
 
     for seed in VARIATION_SEEDS[:count]:
