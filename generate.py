@@ -179,6 +179,7 @@ def _call_stability_structure_api(
     prompt: str,
     seed: int,
     control_strength: float = 0.75,
+    room_type: str | None = None,
 ) -> Image.Image:
     api_key = get_api_key()
     if not api_key:
@@ -196,7 +197,7 @@ def _call_stability_structure_api(
         },
         data={
             "prompt": prompt,
-            "negative_prompt": get_negative_prompt(),
+            "negative_prompt": get_negative_prompt(room_type or ""),
             "control_strength": str(control_strength),
             "seed": str(seed),
             "output_format": "png",
@@ -230,7 +231,8 @@ def iter_redesign_variations(
 
     Each variation follows the selected design brief with a different seed.
     """
-    prompt = prompt or build_prompt(room_type or "Living Room", style or "Modern", wall_color or "Beige", custom_prompt or "")
+    room_type = room_type or "Living Room"
+    prompt = prompt or build_prompt(room_type, style or "Modern", wall_color or "Beige", custom_prompt or "")
     count = max(1, min(int(count), 4))
     # Enforce preservation for UI and programmatic callers alike.
     strength = max(0.25, min(float(strength), 0.45))
@@ -244,6 +246,7 @@ def iter_redesign_variations(
                 prompt=prompt,
                 seed=seed,
                 control_strength=max(0.85, min(1.0, 1.3 - strength)),
+                room_type=room_type,
             )
         return
 
@@ -261,7 +264,7 @@ def iter_redesign_variations(
         generator = torch.Generator(device=device).manual_seed(seed)
         result = pipe(
             prompt=prompt,
-            negative_prompt=get_negative_prompt(),
+            negative_prompt=get_negative_prompt(room_type or ""),
             image=prepared_image,
             control_image=[canny_control, depth_control],
             strength=strength,

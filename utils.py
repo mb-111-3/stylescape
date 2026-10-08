@@ -178,6 +178,8 @@ ROOM_TYPE_DESCRIPTIONS = {
 
 # Per-(room type, style) accuracy refinements so furniture and materials stay
 # plausible for both the space and the chosen aesthetic simultaneously.
+# Every ROOM_TYPES x STYLES combination is covered so no style falls back
+# to a generic look that can drift into the wrong room type.
 ROOM_STYLE_REFINEMENTS = {
     ("Living Room", "Modern"): "low sectional sofa, geometric area rug, floating media wall",
     ("Living Room", "Luxury"): "tufted velvet sofa set, marble coffee table, statement chandelier over seating",
@@ -199,6 +201,42 @@ ROOM_STYLE_REFINEMENTS = {
     ("Kitchen", "North Indian"): "carved wood cabinet fronts, jaali-pattern cabinet inserts, copper and brass fixtures",
     ("Bathroom", "South Indian"): "Athangudi tile flooring, teak wood vanity, brass fixtures and mirror frame",
     ("Bathroom", "North Indian"): "jaali-pattern tile accent wall, carved wood vanity, ornate brass fixtures",
+    ("Living Room", "Maharashtrian"): "carved wooden sofa with paithani-fabric cushions, wooden pillars and beams, brass samai lamps as decor",
+    ("Bedroom", "Maharashtrian"): "carved wooden bed with traditional Maharashtrian textiles, wooden jhula-style bench, brass samai table lamps",
+    ("Kitchen", "Maharashtrian"): "wood-finish cabinets with brass handles, stone backsplash, copper vessels on display shelf",
+    ("Bathroom", "Maharashtrian"): "stone-look tiles, carved wood vanity, brass fixtures and traditional lamp accent",
+    ("Living Room", "Rajasthani"): "carved wooden sofa with bandhani cushions, jharokha niche, brass lanterns and miniature art",
+    ("Bedroom", "Rajasthani"): "carved wooden bed with bandhani bedding, arched headboard wall, brass lantern bedside lights",
+    ("Kitchen", "Rajasthani"): "carved wood cabinet fronts, hand-painted tile backsplash, brass and copper fixtures",
+    ("Bathroom", "Rajasthani"): "hand-painted tile accent wall, carved wood vanity, brass fixtures and wall niches",
+    ("Living Room", "Gujarati"): "carved wooden sofa with bandhani and mirror-work cushions, colorful wall art, brass decor pieces",
+    ("Bedroom", "Gujarati"): "carved wooden bed with mirror-work Gujarati bedding, colorful cushions, brass bedside decor",
+    ("Kitchen", "Gujarati"): "bright wood cabinets, colorful embroidered runner, brass hardware and decor",
+    ("Bathroom", "Gujarati"): "colorful tile accents, wooden vanity, brass fixtures and mirror-work framed mirror",
+    ("Living Room", "Kerala"): "teak and rosewood sofa with Kerala handloom cushions, carved wooden columns, brass nilavilakku lamp",
+    ("Bedroom", "Kerala"): "teak four-poster style bed, Kerala handloom bedding, carved columns, brass nilavilakku lamps",
+    ("Kitchen", "Kerala"): "teak wood cabinetry, natural stone backsplash, brass vessels and traditional storage cues",
+    ("Bathroom", "Kerala"): "natural stone tiles, teak vanity, brass fixtures and nilavilakku-style accent",
+    ("Living Room", "Bengali"): "wooden and cane sofa with kantha cushions, terracotta decor, Bengali handloom throw",
+    ("Bedroom", "Bengali"): "wooden bed with kantha bedding, cane bench, terracotta accents and brass lighting",
+    ("Kitchen", "Bengali"): "wood and cane-front cabinets, terracotta tile backsplash, brass and pottery accents",
+    ("Bathroom", "Bengali"): "terracotta tile accents, wood vanity, cane detail, simple brass fixtures",
+    ("Living Room", "Punjabi"): "heavy carved wooden sofa with phulkari cushions, colorful rug, brass objects and warm layered light",
+    ("Bedroom", "Punjabi"): "heavy carved wooden bed with phulkari bedding, colorful cushions, brass lamps and artwork",
+    ("Kitchen", "Punjabi"): "rich wood cabinets with brass handles, colorful backsplash, phulkari runner and brass decor",
+    ("Bathroom", "Punjabi"): "warm colorful tile accent, carved wood vanity, brass fixtures and textile accent",
+    ("Living Room", "Kashmiri"): "walnut carved sofa with Kashmiri carpet rug, papier-mache accents, khatamband-pattern ceiling detail",
+    ("Bedroom", "Kashmiri"): "walnut carved bed with rich Kashmiri textiles, carpet rug, papier-mache lamps",
+    ("Kitchen", "Kashmiri"): "walnut-finish cabinets, Persian-pattern backsplash, brass fixtures and carpet runner",
+    ("Bathroom", "Kashmiri"): "geometric khatamband-pattern accent, walnut vanity, brass fixtures and rich textile accent",
+    ("Living Room", "Mughal / Indo-Islamic"): "symmetrical carved seating with silk cushions, jaali screen, arched niches, brass lanterns",
+    ("Bedroom", "Mughal / Indo-Islamic"): "carved bed with silk velvet bedding, symmetrical nightstands, jaali screen, brass lanterns",
+    ("Kitchen", "Mughal / Indo-Islamic"): "symmetrical cabinetry with jaali inserts, marble backsplash, brass fixtures",
+    ("Bathroom", "Mughal / Indo-Islamic"): "symmetrical marble layout, jaali-pattern tile, brass fixtures, arched mirror",
+    ("Living Room", "General Indian Traditional"): "carved wooden sofa with Indian textile cushions, brass lamps, rangoli-motif rug, traditional art",
+    ("Bedroom", "General Indian Traditional"): "carved wooden bed with Indian textile bedding, brass lamps, traditional art and rug",
+    ("Kitchen", "General Indian Traditional"): "carved wood cabinets, brass handles, traditional tile backsplash, brass vessels",
+    ("Bathroom", "General Indian Traditional"): "traditional tile accents, carved wood vanity, brass fixtures and framed mirror",
 }
 
 WALL_COLOR_DESCRIPTIONS = {
@@ -214,8 +252,44 @@ NEGATIVE_PROMPT = (
     "extra furniture floating, unrealistic lighting, deformed walls, moved windows, extra windows, missing doors, new doorways, "
     "swapped doors, mirrored layout, changed floor plan, altered ceiling height, different camera angle, "
     "removed built-in cabinetry, moved kitchen cabinets, changed countertops, altered bathroom fixtures, "
+    "room type change, bedroom converted to living room, living room converted to bedroom, "
+    "kitchen converted to bedroom, bathroom converted to bedroom, bedroom converted to kitchen, "
+    "wrong room function, office, dining room conversion, "
     "cluttered, dark, noisy, low resolution"
 )
+
+# Elements that belong to OTHER room types and must not leak into the
+# selected room type's redesign (prevents e.g. a bed appearing in a kitchen).
+ROOM_TYPE_EXCLUSIONS = {
+    "Living Room": "bed, headboard, nightstand, bedroom dresser, wardrobe in place of seating, kitchen cabinets, countertops, stove, oven, kitchen sink, shower, bathtub, toilet, bathroom vanity",
+    "Bedroom": "sofa set, living room sectional, coffee table as main furniture, TV media wall replacing bed, kitchen cabinets, countertops, stove, oven, kitchen sink, shower, bathtub, toilet, bathroom vanity, office desk setup replacing bed",
+    "Kitchen": "bed, headboard, nightstand, wardrobe, sofa set, sectional, coffee table, shower, bathtub, toilet, bathroom vanity, office setup",
+    "Bathroom": "bed, headboard, nightstand, wardrobe, sofa set, sectional, coffee table, kitchen cabinets, countertops, stove, oven, kitchen sink, dining table",
+}
+
+# Furniture/fixtures that MUST stay in the same place for each room type.
+# Injected into the positive prompt so the model keeps the room's function
+# and only restyles surfaces, textiles, lighting, and decor.
+ROOM_TYPE_ANCHORS = {
+    "Living Room": (
+        "Keep this as a living room only: keep the sofa set, coffee table, area rug, "
+        "accent chairs, and media console in their original positions. Do not add a bed."
+    ),
+    "Bedroom": (
+        "Keep this as a bedroom only: keep the bed with headboard as the central furniture "
+        "in its original position, plus nightstands with lamps and wardrobe/dresser. "
+        "Do not replace the bed with a sofa, do not remove the bed, do not add kitchen "
+        "cabinets, stoves, showers, or toilets."
+    ),
+    "Kitchen": (
+        "Keep this as a kitchen only: keep countertops, base and wall cabinets, backsplash, "
+        "sink, and appliances in their original positions. Do not add a bed, sofa, shower, or toilet."
+    ),
+    "Bathroom": (
+        "Keep this as a bathroom only: keep the vanity with mirror, toilet, and shower/tub "
+        "in their original positions. Do not add a bed, sofa, kitchen cabinets, or stove."
+    ),
+}
 
 
 # --------------------------------------------------------------------------
@@ -265,6 +339,10 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
     """
     Construct a rich Stable Diffusion prompt from structured selections
     and an optional free-text custom prompt.
+
+    The room type is locked: the prompt forces the model to keep the
+    original room function (e.g. bedroom stays a bedroom) and only apply
+    the selected interior style on top of it.
     """
     for color in (secondary, accent):
         if not re.fullmatch(r"#[0-9a-fA-F]{6}", color or ""):
@@ -275,17 +353,25 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
     style_desc = STYLE_DESCRIPTIONS.get(style, style.lower())
     wall_desc = WALL_COLOR_DESCRIPTIONS.get(wall_color, f"{wall_color.lower()} walls")
     refinement = ROOM_STYLE_REFINEMENTS.get((room_type, style), "")
+    anchor = ROOM_TYPE_ANCHORS.get(room_type, f"Keep this strictly as a {room_type}.")
+    exclusions = ROOM_TYPE_EXCLUSIONS.get(room_type, "")
 
     base_prompt = (
+        "Restyle this existing room without architectural changes. "
+        f"ROOM LOCK: This space is strictly a {room_type} and must remain a {room_type} "
+        f"after redesign. Do not convert it into any other room type. {anchor} "
         "Preserve the exact architecture: camera angle, floor plan, wall positions, ceiling, floor, windows, doors, "
         "door swings, kitchen cabinets, countertops, built-in storage, bathroom fixtures, and all openings stay in "
         "their original places. Do not move, swap, mirror, add, or remove windows, doors, or cabinetry. Restyle only "
-        "paint, textures, textiles, lighting, loose furniture, and decor. Keep existing furniture in the same "
+        "paint, textures, textiles, lighting, loose furniture finishes, and decor. Keep existing furniture in the same "
         "locations and realistic scale. Photorealistic interior, natural light matching the photo, high detail, "
         "clean and uncluttered. "
         f"A redesign of a {room_desc}, {style_desc}, {wall_desc}. "
         + (f"Include details true to this room and style: {refinement}. " if refinement else "")
+        + (f"Strictly forbid in this {room_type}: {exclusions}. " if exclusions else "")
         + f"Use {wall_color} as the dominant wall color (60 percent), {secondary} for furniture and textiles (30 percent), and {accent} for small accents (10 percent). These colors override any style defaults. "
+        "Apply ONLY the selected style's materials, colors, and decor onto this same room type; "
+        "never borrow furniture layouts from a different room type. "
         "Materials, furniture scale, and lighting direction must stay physically consistent with the original photo. "
         "professional interior photography, architectural digest style, shot on a full-frame DSLR with a wide-angle "
         "lens, balanced exposure, true-to-life colors, sharp focus throughout, 8k, ultra-detailed, hyperrealistic"
@@ -298,8 +384,15 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
     return base_prompt
 
 
-def get_negative_prompt() -> str:
-    """Return the shared negative prompt used across generations."""
+def get_negative_prompt(room_type: str = "") -> str:
+    """
+    Return the shared negative prompt, extended with the furniture/fixtures
+    that belong to other room types so the output stays true to the room
+    type the user actually selected.
+    """
+    exclusions = ROOM_TYPE_EXCLUSIONS.get(room_type, "")
+    if exclusions:
+        return f"{NEGATIVE_PROMPT}, {exclusions}"
     return NEGATIVE_PROMPT
 
 
