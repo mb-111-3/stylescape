@@ -29,8 +29,9 @@ def read_env(path=None):
 
 
 def get_api_key():
-    # An explicitly saved value wins over an inherited, stale process value.
-    return read_env().get('STABILITY_API_KEY', os.getenv('STABILITY_API_KEY', '')).strip()
+    # Prefer the rotating key pool; it falls back to the legacy single .env key on its own.
+    import key_pool
+    return key_pool.get_active_key()
 
 
 def get_admin_password():

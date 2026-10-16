@@ -25,20 +25,27 @@ ROOM_TYPES = ["Living Room", "Bedroom", "Kitchen", "Bathroom"]
 
 STYLES = [
     "Modern",
-    "Luxury",
-    "Contemporary Indian",
     "South Indian",
-    "North Indian",
     "Maharashtrian",
     "Rajasthani",
-    "Gujarati",
-    "Kerala",
     "Bengali",
-    "Punjabi",
-    "Kashmiri",
-    "Mughal / Indo-Islamic",
-    "General Indian Traditional",
 ]
+# STYLES = [
+#     "Modern",
+#     "Luxury",
+#     "Contemporary Indian",
+#     "South Indian",
+#     "North Indian",
+#     "Maharashtrian",
+#     "Rajasthani",
+#     "Gujarati",
+#     "Kerala",
+#     "Bengali",
+#     "Punjabi",
+#     "Kashmiri",
+#     "Mughal / Indo-Islamic",
+#     "General Indian Traditional",
+# ]
 
 PALETTES = {
     "Warm sanctuary": ("#E8DDCC", "#A87652", "#536451"),

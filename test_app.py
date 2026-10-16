@@ -67,7 +67,7 @@ class StudioTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp, patch('utils.OUTPUT_DIR', tmp), patch.object(app, 'save_uploaded_image'), patch.object(app, 'iter_redesign_variations', side_effect=partial):
             states = list(app.stream_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 2))
             self.assertEqual(len(states[1][0]), 1)
-            gallery, status, downloads = states[-1]
+            gallery, status, downloads, original_view, generated_view = states[-1]
             self.assertEqual(len(gallery), 1)
             self.assertEqual(gallery[0][0], downloads[0])
             self.assertTrue(Path(downloads[0]).is_file())
@@ -78,7 +78,7 @@ class StudioTests(unittest.TestCase):
         import gradio as gr
         from urllib.parse import quote
         with tempfile.TemporaryDirectory() as tmp, patch('utils.OUTPUT_DIR', tmp), patch.object(app, 'save_uploaded_image'), patch.object(app, 'iter_redesign_variations', return_value=iter([Image.new('RGB', (512,512), 'navy')])):
-            gallery, status, downloads = app.run_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
+            gallery, status, downloads, original_view, generated_view = app.run_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
             demo = app.build_interface()
             component = next(c for c in demo.blocks.values() if isinstance(c, gr.Gallery))
             data = component.postprocess(gallery).model_dump()

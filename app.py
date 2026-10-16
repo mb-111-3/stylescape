@@ -6,6 +6,7 @@ from socket import socket
 from threading import Lock
 import tempfile
 from settings import read_env, get_admin_password, get_api_key
+import key_pool
 
 import gradio as gr
 from fastapi import FastAPI
@@ -139,7 +140,7 @@ def stream_redesign(image, room, style, wall, prompt, secondary, accent, strengt
         brief = build_prompt(room, style, wall, prompt, secondary, accent)
         save_uploaded_image(image)
         total = max(1, min(4, int(count)))
-        yield gallery.copy(), f'Generating concept 1 of {total}. This may take a few minutes.', paths.copy()
+        yield gallery.copy(), f'Generating concept 1 of {total}. This may take a few minutes.', paths.copy(), image, None
         for generated in iter_redesign_variations(image, prompt=brief, room_type=room, style=style, wall_color=wall,
                 custom_prompt=prompt, strength=float(strength), guidance_scale=float(guidance), num_inference_steps=int(steps), count=total):
             path = save_generated_image(generated)
@@ -148,10 +149,10 @@ def stream_redesign(image, room, style, wall, prompt, secondary, accent, strengt
             message = f'{len(paths)} of {total} concepts ready.'
             if len(paths) < total:
                 message += f' Generating concept {len(paths) + 1}...'
-            yield gallery.copy(), message, paths.copy()
+            yield gallery.copy(), message, paths.copy(), image, path
         if not paths:
             raise RuntimeError('The generator returned no images. Please try again.')
-        yield gallery.copy(), f'{len(paths)} concepts ready. Select an image to explore the details.', paths.copy()
+        yield gallery.copy(), f'{len(paths)} concepts ready. Select an image to explore the details.', paths.copy(), image, paths[0]
     except Exception as exc:
         import requests
         if isinstance(exc, (ValidationError, RuntimeError)):
@@ -164,7 +165,7 @@ def stream_redesign(image, room, style, wall, prompt, secondary, accent, strengt
             message = f'Generation could not finish ({type(exc).__name__}). Please try again or check your local runtime.'
         if paths:
             message = f'{len(paths)} concepts saved and available below. Remaining generation stopped: ' + message
-        yield gallery.copy(), message, paths.copy()
+        yield gallery.copy(), message, paths.copy(), image, (paths[0] if paths else None)
 
 
 def run_redesign(*args, **kwargs):
@@ -201,6 +202,25 @@ def save_api_key(key):
 
 def admin_settings_status():
     return 'API key is configured. Enter a new key to replace it.' if get_api_key() else 'No API key configured. Enter a Stability AI key and save.'
+
+
+MAX_KEY_FIELDS = 20
+
+
+def show_key_fields(count):
+    count = max(0, min(MAX_KEY_FIELDS, int(count or 0)))
+    return [gr.update(visible=i < count, value='' if i < count else None) for i in range(MAX_KEY_FIELDS)]
+
+
+def add_pool_keys(*key_values):
+    keys_text = '\n'.join(v for v in key_values if v and v.strip())
+    message = key_pool.add_keys(keys_text)
+    cleared = [gr.update(value='') for _ in key_values]
+    return [*cleared, keys_table_rows(), message]
+
+
+def keys_table_rows():
+    return [[entry['masked'], entry['used_count'], entry['status']] for entry in key_pool.list_keys()]
 
 
 def goto_step1():
@@ -273,6 +293,10 @@ def build_interface():
             gallery = gr.Gallery(label='Generated interiors', columns=2, object_fit='contain', height=560, interactive=False, format='png', preview=True, selected_index=0, elem_id='interior-gallery')
             status = gr.Textbox(value='Generating your concepts...', label='Generation status', interactive=False, lines=2, elem_id='generation-status')
             downloads = gr.File(label='Your generated files', file_count='multiple', interactive=False)
+            gr.Markdown('### Before / after')
+            with gr.Row(elem_id='before-after'):
+                original_view = gr.Image(label='Original room', interactive=False, height=360)
+                generated_view = gr.Image(label='Generated design', interactive=False, height=360)
 
         start.click(goto_step1, None, [hero_screen, step1_modal, step2_modal, output_screen], api_name=False)
         close_1.click(goto_hero, None, [hero_screen, step1_modal, step2_modal, output_screen], api_name=False)
@@ -283,7 +307,7 @@ def build_interface():
             step2_next, [image, room, style, wall], [step2_modal, output_screen, step2_error], api_name=False
         ).success(
             stream_redesign, [image, room, style, wall, prompt, secondary, accent, strength, guidance, steps, count],
-            [gallery, status, downloads], concurrency_limit=1, api_name=False,
+            [gallery, status, downloads, original_view, generated_view], concurrency_limit=1, api_name=False,
         )
     return demo
 
@@ -302,6 +326,17 @@ def create_app():
         admin.load(admin_settings_status, outputs=status, api_name=False, queue=False)
         save.click(save_api_key, key, [key, status], api_name=False, queue=False)
         key.submit(save_api_key, key, [key, status], api_name=False, queue=False)
+
+        gr.Markdown('### API key pool\nChoose how many keys you want to add, paste each one into its own field, then save them all at once. The studio uses one key at a time; once the provider reports it as invalid/expired, the next one takes over automatically.')
+        key_count = gr.Number(label='Number of keys to add', value=1, precision=0, minimum=0, maximum=MAX_KEY_FIELDS)
+        key_fields = [gr.Textbox(label=f'Key {i + 1}', type='password', visible=i == 0) for i in range(MAX_KEY_FIELDS)]
+        key_count.change(show_key_fields, key_count, key_fields, api_name=False, queue=False)
+        save_keys_btn = gr.Button('Save keys to pool', variant='primary')
+        pool_status = gr.Textbox(label='Pool status', interactive=False)
+        keys_table = gr.Dataframe(headers=['Key', 'Used', 'Status'], value=keys_table_rows(), interactive=False, row_count=(0, 'dynamic'))
+        save_keys_btn.click(add_pool_keys, key_fields, [*key_fields, keys_table, pool_status], api_name=False, queue=False)
+        admin.load(keys_table_rows, outputs=keys_table, api_name=False, queue=False)
+
         gr.HTML('<a href="/admin/logout">Sign out</a>')
     server = gr.mount_gradio_app(server, admin, path='/admin', auth=admin_auth, auth_message='StyleScape Admin - sign in with your admin username and password.', css=CSS, theme=THEME, blocked_paths=[str(ENV_PATH.parent / '.settings-private'), str(ENV_PATH), str(ENV_PATH.with_suffix('.env.tmp'))], max_file_size='20mb')
     studio = build_interface()

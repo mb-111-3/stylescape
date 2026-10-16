@@ -205,6 +205,12 @@ def _call_stability_structure_api(
         timeout=180,
     )
 
+    import key_pool
+    if response.status_code in (401, 402):
+        key_pool.mark_expired(api_key)
+    else:
+        key_pool.record_use(api_key)
+
     if response.status_code >= 400:
         raise RuntimeError({401: "The API key is invalid. Update it on the admin page.", 402: "The generation service is temporarily unavailable. Please try again later.", 403: "The provider rejected this request. Try a different image or prompt.", 429: "The provider is busy. Please try again shortly."}.get(response.status_code, f"Generation provider returned HTTP {response.status_code}. Please try again."))
 
