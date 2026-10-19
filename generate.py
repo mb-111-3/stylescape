@@ -251,7 +251,7 @@ def iter_redesign_variations(
                 input_image=input_image,
                 prompt=prompt,
                 seed=seed,
-                control_strength=max(0.65, min(1.0, 1.3 - strength)),
+                control_strength=max(0.8, min(1.0, 1.4 - strength)),
                 room_type=room_type,
             )
         return

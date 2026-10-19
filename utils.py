@@ -83,10 +83,10 @@ STYLE_DESCRIPTIONS = {
     ),
     "South Indian": (
         "traditional South Indian interior design inspired by Tamil Nadu, Karnataka and "
-        "Andhra/Telangana heritage, dark teak and rosewood furniture, carved wooden pillars, "
-        "courtyard-oriented layout cues, brass lamps and brass urli bowls, wooden swings, "
+        "Andhra/Telangana heritage, dark teak and rosewood furniture, "
+        "brass lamps and brass urli bowls, wooden swings, "
         "traditional geometric patterns, stone or patterned tile flooring, Tanjore-inspired "
-        "gold-leaf artwork, large traditional carved wooden doors, cream, brown, maroon, "
+        "gold-leaf artwork, cream, brown, maroon, "
         "mustard and deep green color palette, elegant grand temple-and-courtyard ambiance"
     ),
     "North Indian": (
@@ -97,12 +97,12 @@ STYLE_DESCRIPTIONS = {
         "framing, plush floor seating with bolster cushions, opulent heritage ambiance"
     ),
     "Maharashtrian": (
-        "traditional Maharashtrian Wada-inspired interior design, wooden pillars and exposed "
-        "beams, carved wooden furniture, a wooden jhula swing, paati and traditional low "
+        "traditional Maharashtrian Wada-inspired interior design, "
+        "carved wooden furniture, a wooden jhula swing, paati and traditional low "
         "seating, brass samai and traditional oil lamps, copper and brass vessels as decor, "
         "terracotta or stone flooring, earthy beige, brown, ochre and muted red color palette, "
-        "traditional Maharashtrian fabrics, traditional wooden doors and windows, "
-        "courtyard-oriented planning cues, refined heritage Wada feel suited to a modern home"
+        "traditional Maharashtrian fabrics, "
+        "refined heritage Wada feel suited to a modern home"
     ),
     "Rajasthani": (
         "Rajasthani Haveli-inspired interior design, jharokhas and arched openings, carved "
@@ -208,7 +208,7 @@ ROOM_STYLE_REFINEMENTS = {
     ("Kitchen", "North Indian"): "carved wood cabinet fronts, jaali-pattern cabinet inserts, copper and brass fixtures",
     ("Bathroom", "South Indian"): "Athangudi tile flooring, teak wood vanity, brass fixtures and mirror frame",
     ("Bathroom", "North Indian"): "jaali-pattern tile accent wall, carved wood vanity, ornate brass fixtures",
-    ("Living Room", "Maharashtrian"): "carved wooden sofa with paithani-fabric cushions, wooden pillars and beams, brass samai lamps as decor",
+    ("Living Room", "Maharashtrian"): "carved wooden sofa with paithani-fabric cushions, brass samai lamps as decor",
     ("Bedroom", "Maharashtrian"): "carved wooden bed with traditional Maharashtrian textiles, wooden jhula-style bench, brass samai table lamps",
     ("Kitchen", "Maharashtrian"): "wood-finish cabinets with brass handles, stone backsplash, copper vessels on display shelf",
     ("Bathroom", "Maharashtrian"): "stone-look tiles, carved wood vanity, brass fixtures and traditional lamp accent",
@@ -257,7 +257,8 @@ WALL_COLOR_DESCRIPTIONS = {
 NEGATIVE_PROMPT = (
     "blurry, low quality, distorted proportions, watermark, text, logo, "
     "extra furniture floating, unrealistic lighting, deformed walls, moved windows, extra windows, added doors, "
-    "invented doors, new doorways, extra doorways, "
+    "invented doors, new doorways, extra doorways, added pillars, added exposed beams, added arches, "
+    "added niches, added jharokhas, new structural elements, "
     "swapped doors, mirrored layout, changed floor plan, altered ceiling height, altered room dimensions, "
     "changed room width, changed room height, different camera angle, different field of view, "
     "removed built-in cabinetry, moved kitchen cabinets, changed countertops, altered bathroom fixtures, "
@@ -381,7 +382,8 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
         "as they appear, with no other dimension, room, or view introduced. Do not move, swap, mirror, add, or "
         "remove windows, doors, or cabinetry. If the original photo shows no door, do not add a door; if it shows "
         "no window, do not add a window. Only include doors, windows, and openings that are actually visible in "
-        "the uploaded photo. Restyle "
+        "the uploaded photo. Do not add pillars, exposed beams, arches, niches, jharokhas, or any other new "
+        "architectural or structural element that is not already present in the original photo. Restyle "
         "paint, textures, textiles, lighting, furniture finishes, and decor to express the selected style. Keep existing furniture in the same "
         "locations and realistic scale. Photorealistic interior, natural light matching the photo, high detail, "
         "clean and uncluttered. "
