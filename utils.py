@@ -21,7 +21,7 @@ import re
 # Constants
 # --------------------------------------------------------------------------
 
-ROOM_TYPES = ["Living Room", "Bedroom", "Kitchen", "Bathroom"]
+ROOM_TYPES = ["Living Room", "Bedroom", "Kitchen"]
 
 STYLES = [
     "Modern",
@@ -166,8 +166,8 @@ STYLE_DESCRIPTIONS = {
 
 ROOM_TYPE_DESCRIPTIONS = {
     "Living Room": (
-        "spacious living room with a sofa set, coffee table, area rug, accent chairs, "
-        "media console, and a defined entertainment area, wide-angle architectural view"
+        "living room with a sofa set, coffee table, area rug, accent chairs, "
+        "media console, and a defined entertainment area"
     ),
     "Bedroom": (
         "comfortable bedroom with a dressed bed, headboard, nightstands with lamps, "
@@ -256,8 +256,10 @@ WALL_COLOR_DESCRIPTIONS = {
 
 NEGATIVE_PROMPT = (
     "blurry, low quality, distorted proportions, watermark, text, logo, "
-    "extra furniture floating, unrealistic lighting, deformed walls, moved windows, extra windows, missing doors, new doorways, "
-    "swapped doors, mirrored layout, changed floor plan, altered ceiling height, different camera angle, "
+    "extra furniture floating, unrealistic lighting, deformed walls, moved windows, extra windows, added doors, "
+    "invented doors, new doorways, extra doorways, "
+    "swapped doors, mirrored layout, changed floor plan, altered ceiling height, altered room dimensions, "
+    "changed room width, changed room height, different camera angle, different field of view, "
     "removed built-in cabinetry, moved kitchen cabinets, changed countertops, altered bathroom fixtures, "
     "room type change, bedroom converted to living room, living room converted to bedroom, "
     "kitchen converted to bedroom, bathroom converted to bedroom, bedroom converted to kitchen, "
@@ -280,7 +282,9 @@ ROOM_TYPE_EXCLUSIONS = {
 ROOM_TYPE_ANCHORS = {
     "Living Room": (
         "Keep this as a living room only: keep the sofa set, coffee table, area rug, "
-        "accent chairs, and media console in their original positions. Do not add a bed."
+        "accent chairs, and media console in their original positions. Do not add a bed. "
+        "Do not add a door or window that is not visible in the original photo; keep the "
+        "exact same room height, width, and view as the uploaded photo."
     ),
     "Bedroom": (
         "Keep this as a bedroom only: keep the bed with headboard as the central furniture "
@@ -290,7 +294,9 @@ ROOM_TYPE_ANCHORS = {
     ),
     "Kitchen": (
         "Keep this as a kitchen only: keep countertops, base and wall cabinets, backsplash, "
-        "sink, and appliances in their original positions. Do not add a bed, sofa, shower, or toilet."
+        "sink, and appliances in their original positions. Do not add a bed, sofa, shower, or toilet. "
+        "Do not add a door or window that is not visible in the original photo; keep the "
+        "exact same room height, width, and view as the uploaded photo."
     ),
     "Bathroom": (
         "Keep this as a bathroom only: keep the vanity with mirror, toilet, and shower/tub "
@@ -369,20 +375,25 @@ def build_prompt(room_type: str, style: str, wall_color: str, custom_prompt: str
         f"{style_desc}. "
         f"ROOM LOCK: This space is strictly a {room_type} and must remain a {room_type} "
         f"after redesign. Do not convert it into any other room type. {anchor} "
-        "Preserve the exact architecture: camera angle, floor plan, wall positions, ceiling, floor, windows, doors, "
-        "door swings, kitchen cabinets, countertops, built-in storage, bathroom fixtures, and all openings stay in "
-        "their original places. Do not move, swap, mirror, add, or remove windows, doors, or cabinetry. Restyle "
+        "Preserve the exact architecture of the uploaded photo only: use its exact camera angle and field of view, "
+        "exact room dimensions (height and width), floor plan, wall positions, ceiling, floor, windows, doors, "
+        "door swings, kitchen cabinets, countertops, built-in storage, bathroom fixtures, and all openings exactly "
+        "as they appear, with no other dimension, room, or view introduced. Do not move, swap, mirror, add, or "
+        "remove windows, doors, or cabinetry. If the original photo shows no door, do not add a door; if it shows "
+        "no window, do not add a window. Only include doors, windows, and openings that are actually visible in "
+        "the uploaded photo. Restyle "
         "paint, textures, textiles, lighting, furniture finishes, and decor to express the selected style. Keep existing furniture in the same "
         "locations and realistic scale. Photorealistic interior, natural light matching the photo, high detail, "
         "clean and uncluttered. "
-        f"A redesign of a {room_desc}, {wall_desc}, unmistakably in {style} style. "
+        f"A redesign of this {room_desc}, {wall_desc}, unmistakably in {style} style, using only the room's actual "
+        "height, width, and view from the uploaded photo. "
         + (f"Include details true to this room and style: {refinement}. " if refinement else "")
         + (f"Strictly forbid in this {room_type}: {exclusions}. " if exclusions else "")
         + f"Use {wall_color} walls as a base adapted to the {style} palette, with {secondary} for furniture and textiles and {accent} for small accents, harmonized with authentic {style} colors and materials. "
         f"The finished {room_type} must read clearly as {style} at first glance. "
         "Materials, furniture scale, and lighting direction must stay physically consistent with the original photo. "
-        "professional interior photography, architectural digest style, shot on a full-frame DSLR with a wide-angle "
-        "lens, balanced exposure, true-to-life colors, sharp focus throughout, 8k, ultra-detailed, hyperrealistic"
+        "professional interior photography, architectural digest style, same framing and lens perspective as the "
+        "original photo, balanced exposure, true-to-life colors, sharp focus throughout, 8k, ultra-detailed, hyperrealistic"
     )
 
     custom_prompt = (custom_prompt or "").strip()
