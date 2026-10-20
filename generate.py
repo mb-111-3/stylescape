@@ -34,7 +34,7 @@ DEPTH_MODEL_ID = os.getenv("STYLESCAPE_DEPTH_MODEL", "Intel/dpt-hybrid-midas")
 
 DEFAULT_STRENGTH = 0.55
 DEFAULT_GUIDANCE_SCALE = 12.0
-DEFAULT_CONTROLNET_SCALE = [0.7, 0.8]
+DEFAULT_CONTROLNET_SCALE = [0.85, 0.9]
 STABILITY_STRUCTURE_URL = "https://api.stability.ai/v2beta/stable-image/control/structure"
 
 _pipeline = None
@@ -251,7 +251,7 @@ def iter_redesign_variations(
                 input_image=input_image,
                 prompt=prompt,
                 seed=seed,
-                control_strength=max(0.8, min(1.0, 1.4 - strength)),
+                control_strength=max(0.85, min(1.0, 1.5 - strength)),
                 room_type=room_type,
             )
         return
