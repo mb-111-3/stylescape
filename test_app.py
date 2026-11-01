@@ -65,7 +65,7 @@ class StudioTests(unittest.TestCase):
             yield Image.new('RGB', (512,512), 'navy')
             raise RuntimeError('The Stability account has insufficient credits.')
         with tempfile.TemporaryDirectory() as tmp, patch('utils.OUTPUT_DIR', tmp), patch.object(app, 'save_uploaded_image'), patch.object(app, 'iter_redesign_variations', side_effect=partial):
-            states = list(app.stream_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 2))
+            states = list(app.stream_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Modern', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 2))
             self.assertEqual(len(states[1][0]), 1)
             gallery, status, downloads, original_view, generated_view = states[-1]
             self.assertEqual(len(gallery), 1)
@@ -78,7 +78,7 @@ class StudioTests(unittest.TestCase):
         import gradio as gr
         from urllib.parse import quote
         with tempfile.TemporaryDirectory() as tmp, patch('utils.OUTPUT_DIR', tmp), patch.object(app, 'save_uploaded_image'), patch.object(app, 'iter_redesign_variations', return_value=iter([Image.new('RGB', (512,512), 'navy')])):
-            gallery, status, downloads, original_view, generated_view = app.run_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
+            gallery, status, downloads, original_view, generated_view = app.run_redesign(Image.new('RGB',(512,512)), 'Bedroom', 'Modern', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
             demo = app.build_interface()
             component = next(c for c in demo.blocks.values() if isinstance(c, gr.Gallery))
             data = component.postprocess(gallery).model_dump()
@@ -117,7 +117,7 @@ class StudioTests(unittest.TestCase):
                 self.assertEqual(os.environ['STABILITY_API_KEY'], 'test-secret-123456')
 
     def test_validation(self):
-        result = app.run_redesign(None, 'Bedroom', 'Minimal', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
+        result = app.run_redesign(None, 'Bedroom', 'Modern', '#123456', '', '#abcdef', '#654321', .6, 10, 25, 1)
         self.assertEqual(result[0], [])
         self.assertIn('upload', result[1])
 
